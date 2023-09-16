@@ -8,6 +8,7 @@ public class PollServiceApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(PollServiceApplication.class, args);
+		System.out.println("Hey");
 	}
 
 }
