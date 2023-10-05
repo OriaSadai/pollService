@@ -1,5 +1,6 @@
 package pollProject.pollService.Service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ public class PollServiceImpl implements PollService {
     private UserService userService;
     private static final Logger logger = LoggerFactory.getLogger(PollServiceImpl.class);
     @Override
-    public void createPoll(Poll poll) {
+    public void createPoll(Poll poll) throws JsonProcessingException {
         pollRepository.createPoll(poll);
     }
     @Override
@@ -35,13 +36,12 @@ public class PollServiceImpl implements PollService {
     }
     @Override
     public List<Poll> readAllPoll(Long userId) {
-        Boolean isUserConfirmed = false;
-//        isUserConfirmed = userService.checkUserConfirmed(userId);
-        logger.info(String.format("IN THE SERVICE: THE REGISTRATION RECEIVED:\"%s\"",isUserConfirmed));
-        isUserConfirmed = true; //Delete later
+        Boolean isUserConfirmed = userService.checkUserConfirmed(userId);
         if (isUserConfirmed) {
+            logger.info(String.format("READING POLL REQUESTED BY USER ID:\"%s\" - CONFIRMED! SENDING POLL :-)",userId));
             return pollRepository.readAllPoll();
         } else {
+            logger.warn(String.format("READING POLL REQUESTED BY USER ID:\"%s\" - NOT CONFIRMED! NOT SEND :-(",userId));
             return null;
         }
     }

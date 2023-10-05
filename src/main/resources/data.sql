@@ -14,5 +14,6 @@ CREATE TABLE answers (
     user_id int(11) NOT NULL,
     poll_id int(11) NOT NULL,
     answer_number varchar(300) NOT NULL,
-    PRIMARY KEY (user_id, poll_id)
+    PRIMARY KEY (user_id, poll_id),
+    FOREIGN KEY (poll_id) REFERENCES poll (id)
 );

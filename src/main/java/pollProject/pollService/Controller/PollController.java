@@ -1,5 +1,6 @@
 package pollProject.pollService.Controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import pollProject.pollService.Model.Poll;
@@ -13,7 +14,7 @@ public class PollController {
     @Autowired
     PollService pollService;
     @PostMapping(value = "/create")
-    public void createPoll(@RequestBody Poll poll) {
+    public void createPoll(@RequestBody Poll poll) throws JsonProcessingException {
         pollService.createPoll(poll);
     }
     @GetMapping(value = "/read/{id}")

@@ -37,12 +37,12 @@ public class PollRepositoryImpl implements PollRepository {
         try {
             return jdbcTemplate.queryForObject(sql, pollMapper, id);
         } catch (EmptyResultDataAccessException e) {
-            logger.info(String.format("USER WITH ID %s IS NOT EXIST",id));
+            logger.error(String.format("USER WITH ID:\"%s\" IS NOT EXIST!",id));
             return null;
         }
     }
     @Override
-    public void updatePoll(Poll poll) {
+    public void updatePoll(Poll poll) throws EmptyResultDataAccessException{
         String sql = "UPDATE " + POLL_TABLE_NAME + " SET question=?, first_answer=?, second_answer=?, third_answer=?, fourth_answer=? WHERE id=?";
         try {
             jdbcTemplate.update(
@@ -55,7 +55,7 @@ public class PollRepositoryImpl implements PollRepository {
                     poll.getPollId()
             );
         } catch (EmptyResultDataAccessException e) {
-            logger.warn(String.format("POLL WITH ID %s IS NOT EXIST",poll.getPollId()));
+            logger.warn(String.format("\"%s\". UPDATING POLL: POLL WITH ID:\"%s\" IS NOT EXIST!",e,poll.getPollId()));
         }
     }
     @Override
@@ -64,12 +64,12 @@ public class PollRepositoryImpl implements PollRepository {
         jdbcTemplate.update(sql, id);
     }
     @Override
-    public List<Poll> readAllPoll() {
+    public List<Poll> readAllPoll() throws EmptyResultDataAccessException {
         String sql = "SELECT * FROM " + POLL_TABLE_NAME + "";
         try {
             return jdbcTemplate.query(sql, pollMapper);
         } catch (EmptyResultDataAccessException e) {
-            logger.info("POLL LIST IS EMPTY");
+            logger.warn(String.format("\"%s\". READING ALL POLL: POLL LIST IS EMPTY!",e));
             return null;
         }
     }
