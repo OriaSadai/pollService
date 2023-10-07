@@ -38,7 +38,7 @@ public class AnswersServiceImpl implements AnswersService {
                 answerRepository.createAnswer(userAnswers.getUserAnswers().get(i), userAnswers.getUserId());
             }
         } else {
-            logger.error(String.format("ERROR!! USER ID:\"%s\" NOT APPROVED!",userAnswers.getUserId()));
+            logger.error(String.format("ERROR!! USER ID:\"%s\" NOT APPROVED! HAVE CHECK WITH THE FRONTEND PROGRAMMER.",userAnswers.getUserId()));
         }
     }
     @Override
@@ -54,43 +54,21 @@ public class AnswersServiceImpl implements AnswersService {
         answerMap.clear();
         answersList.clear();
         answersList = answerRepository.readAllAnswersByPollId(pollId);
-        Integer counter = 0;
 
         if (answersList.isEmpty()) {
             logger.error(String.format("ANSWER LIST FOR POLL ID:\"%s\" IS EMPTY!",pollId));
             return null;
         }
 
-        for (short i=0; i<answersList.size(); i++) {
-            if (answersList.get(i).getAnswerNumber() == AnswerNumber.FIRST_ANSWER) {
-                counter++;
+        for (AnswerNumber answerNumber : AnswerNumber.values()) {
+            Integer counter = 0;
+            for (Answer answer : answersList) {
+                if (answer.getAnswerNumber() == answerNumber) {
+                    counter++;
+                }
             }
+            answerMap.put(answerNumber, counter);
         }
-        answerMap.put(AnswerNumber.FIRST_ANSWER, counter);
-        counter = 0;
-
-        for (short i=0; i<answersList.size(); i++) {
-            if (answersList.get(i).getAnswerNumber() == AnswerNumber.FIRST_ANSWER) {
-                counter++;
-            }
-        }
-        answerMap.put(AnswerNumber.SECOND_ANSWER, counter);
-        counter = 0;
-
-        for (short i=0; i<answersList.size(); i++) {
-            if (answersList.get(i).getAnswerNumber() == AnswerNumber.THIRD_ANSWER) {
-                counter++;
-            }
-        }
-        answerMap.put(AnswerNumber.THIRD_ANSWER, counter);
-        counter = 0;
-
-        for (short i=0; i<answersList.size(); i++) {
-            if (answersList.get(i).getAnswerNumber() == AnswerNumber.FOURTH_ANSWER) {
-                counter++;
-            }
-        }
-        answerMap.put(AnswerNumber.FOURTH_ANSWER, counter);
 
         return answerMap;
     }
